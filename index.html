@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verdulería Ecuador - Inventario Profesional</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div id="loginContainer" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>🌿 Verdulería Jipijapa</h1>
+                <p>Acceso al Sistema de Inventario</p>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Usuario" required>
+                    <label></label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <label></label>
+                </div>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <div id="loginError" class="error"></div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard hidden">
+        <header class="header">
+            <div class="header-left">
+                <h2>📊 Inventario en Tiempo Real</h2>
+                <p>Bienvenido, Admin. Total productos: <span id="totalProducts">0</span> | Stock total: <span id="totalStock">0</span> kg</p>
+            </div>
+            <div class="header-right">
+                <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <section class="add-section">
+                <h3>➕ Registrar Nuevo Producto</h3>
+                <form id="addForm">
+
+                <input type="text" id="productName" placeholder="Nombre del producto (ej: Plátano verde)" required>
+
+                <input type="number" id="quantity" placeholder="Cantidad" min="0" step="0.1" required>
+
+                <select id="unit" required>
+                <option value="">Seleccione unidad</option>
+                <option value="kg">Kilogramos (kg)</option>
+                <option value="lb">Libras (lb)</option>
+                <option value="unidad">Unidad</option>
+                <option value="caja">Caja</option>
+            </select>
+
+            <label>Fecha de registro</label>
+            <input type="date" id="registerDate" required>
+
+            <label>Fecha de caducidad</label>
+            <input type="date" id="expiryDate" required>
+
+            <div id="formError" class="error"></div>
+
+            <button type="submit">Agregar</button>
+
+            </form>
+            </section>
+
+            <section class="calc-section">
+                <h3>🧮 Calculadora de Precios</h3>
+                <div class="calc-box">
+                    <div class="input-group">
+                        <label>Costo (kg)</label>
+                        <input type="number" id="calcCost" placeholder="0.00" oninput="calculateSellingPrice()">
+                    </div>
+                    <div class="input-group">
+                        <label>% Margen</label>
+                        <input type="number" id="calcMargin" value="30" oninput="calculateSellingPrice()">
+                    </div>
+                    <div class="result-display">
+                        <p>Sugerencia de Venta:</p>
+                        <h2 id="calcResult">$0.00</h2>
+                        <p>Ganancia (kg): <span id="calcProfit">$0.00</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar producto...">
+                    <input type="number" id="calcCost" placeholder="0.00" value="0" oninput="calculateSellingPrice()">
+                    <button onclick="getTopProduct()">📊 Producto más movido</button>
+                    <button class="action-btn pdf-btn" onclick="downloadInventoryPDF()">📄 Descargar PDF</button>
+                    <button onclick="getTopSellingProduct()">🔥 Producto más vendido</button>
+                    <span id="lowStockAlert" class="alert hidden">⚠️ ¡Hay productos con stock bajo!</span>
+                </div>
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Fecha Registro</th>
+                        <th>Fecha Caducidad</th>
+                        <th>Estado</th>
+                        <th>Movimientos</th>
+                        <th>Ventas</th>
+                        <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
