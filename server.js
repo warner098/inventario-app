@@ -1,11 +1,15 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const path = require("path");
+
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(__dirname));
 
 const db = mysql.createConnection({
 host: "trolley.proxy.rlwy.net",
@@ -199,4 +203,8 @@ sales:p.ventas
 
 app.listen(3000,()=>{
 console.log("Servidor corriendo en puerto 3000");
+});
+
+app.get("/", (req,res)=>{
+res.sendFile(path.join(__dirname,"index.html"));
 });
