@@ -8,10 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-host:"localhost",
+host:"mysql.railway.internal",
 user:"root",
-password:"CamaraPuerto2026!",
-database:"verduleria"
+password:"ONGfeYnArCoLqcJaQZYkYPROEgHFyEJL",
+database:"railway"
 });
 
 db.connect(err=>{
