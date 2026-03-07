@@ -8,10 +8,11 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-host:"mysql.railway.internal",
+host: "trolley.proxy.rlwy.net",
 user:"root",
 password:"ONGfeYnArCoLqcJaQZYkYPROEgHFyEJL",
-database:"railway"
+database:"railway",
+port: 56473
 });
 
 db.connect(err=>{
