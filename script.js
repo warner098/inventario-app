@@ -1,10 +1,11 @@
+
 // INVENTARIO
 let inventory = [];
 let editingIndex = -1;
 
 function loadData(){
 
-fetch("http://localhost:3000/productos")
+fetch("/productos")
 .then(res => res.json())
 .then(data=>{
 
@@ -29,8 +30,6 @@ fetch("http://localhost:3000/productos")
 });
 
 }
-
-
 
 // LOGIN
 document.getElementById('loginForm').addEventListener('submit',(e)=>{
@@ -98,7 +97,7 @@ if(editingIndex>=0){
 
 const id = inventory[editingIndex].id;
 
-fetch(`http://localhost:3000/productos/${id}`,{
+fetch(`/productos/${id}`,{
 method:"PUT",
 headers:{
 "Content-Type":"application/json"
@@ -113,7 +112,7 @@ document.querySelector('#addForm button').textContent="Agregar";
 }else{
 
 // AGREGAR PRODUCTO
-fetch("http://localhost:3000/productos",{
+fetch("/productos",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -163,7 +162,7 @@ filterTable();
 // TABLA
 function renderRows(data){
 
-    console.log("Renderizando tabla:", data);
+console.log("Renderizando tabla:", data);
 
 const tbody = document.getElementById('tableBody');
 tbody.innerHTML="";
@@ -234,7 +233,7 @@ const id = inventory[index].id;
 
 if(confirm(`¿Eliminar ${inventory[index].name}?`)){
 
-fetch(`http://localhost:3000/productos/${id}`,{
+fetch(`/productos/${id}`,{
 method:"DELETE"
 })
 .then(()=>loadData());
@@ -255,7 +254,7 @@ return;
 
 const id = inventory[index].id;
 
-fetch(`http://localhost:3000/productos/${id}/entrada`,{
+fetch(`/productos/${id}/entrada`,{
 method:"PUT",
 headers:{
 "Content-Type":"application/json"
@@ -278,7 +277,7 @@ return;
 
 const id = inventory[index].id;
 
-fetch(`http://localhost:3000/productos/${id}/salida`,{
+fetch(`/productos/${id}/salida`,{
 method:"PUT",
 headers:{
 "Content-Type":"application/json"
@@ -292,7 +291,7 @@ body:JSON.stringify({amount})
 // PRODUCTO CON MÁS MOVIMIENTO
 function getTopProduct(){
 
-fetch("http://localhost:3000/productos/top-movimientos")
+fetch("/productos/top-movimientos")
 .then(res=>res.json())
 .then(top=>{
 
@@ -307,7 +306,7 @@ Movimientos: ${top.movements}`);
 // PRODUCTO MÁS VENDIDO
 function getTopSellingProduct(){
 
-fetch("http://localhost:3000/productos/top-ventas")
+fetch("/productos/top-ventas")
 .then(res=>res.json())
 .then(top=>{
 
@@ -338,3 +337,4 @@ document.getElementById("calcResult").textContent = "$" + sellingPrice.toFixed(2
 document.getElementById("calcProfit").textContent = "$" + profit.toFixed(2);
 
 }
+
