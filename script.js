@@ -338,3 +338,62 @@ document.getElementById("calcProfit").textContent = "$" + profit.toFixed(2);
 
 }
 
+// DESCARGAR INVENTARIO EN PDF
+function downloadInventoryPDF(){
+
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+
+doc.setFontSize(18);
+doc.text("Inventario - Verdulería Jipijapa", 14, 20);
+
+doc.setFontSize(11);
+doc.text("Fecha: " + new Date().toLocaleDateString(), 14, 28);
+
+// columnas
+const columns = [
+"Producto",
+"Cantidad",
+"Unidad",
+"Fecha Registro",
+"Fecha Caducidad",
+"Estado",
+"Movimientos",
+"Ventas"
+];
+
+// filas
+const rows = inventory.map(item => {
+
+const today = new Date();
+const expiry = new Date(item.expiryDate);
+
+let status = "OK";
+
+if(expiry <= today) status = "Caducado";
+else if(item.quantity < 10) status = "Stock Bajo";
+
+return [
+item.name,
+item.quantity,
+item.unit,
+new Date(item.registerDate).toLocaleDateString(),
+new Date(item.expiryDate).toLocaleDateString(),
+status,
+item.movements,
+item.sales
+];
+
+});
+
+// crear tabla
+doc.autoTable({
+head: [columns],
+body: rows,
+startY: 35
+});
+
+// guardar pdf
+doc.save("inventario-verduleria.pdf");
+
+}
