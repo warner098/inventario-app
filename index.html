@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
@@ -37,6 +38,12 @@
             <div class="header-left">
                 <h2>📊 Inventario en Tiempo Real</h2>
                 <p>Bienvenido, Admin. Total productos: <span id="totalProducts">0</span> | Stock total: <span id="totalStock">0</span> kg</p>
+            </div>
+            <div>
+                <h3>📊 Productos más vendidos</h3>
+
+                <canvas id="salesChart" width="400" height="200"></canvas>
+
             </div>
             <div class="header-right">
                 <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>

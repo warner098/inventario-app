@@ -207,6 +207,9 @@ document.getElementById('lowStockAlert').classList.toggle('hidden',!low);
 // Actualizar tabla
 filterTable();
 
+renderSalesChart();
+
+
 }
 
 
@@ -417,6 +420,55 @@ document.getElementById("calcResult").textContent = "$" + sellingPrice.toFixed(2
 document.getElementById("calcProfit").textContent = "$" + profit.toFixed(2);
 
 }
+
+//Modulos de productos mas vendido
+function renderSalesChart(){
+
+// ordenar productos por ventas
+const sorted = [...inventory].sort((a,b)=> b.sales - a.sales);
+
+// tomar los 5 más vendidos
+const topProducts = sorted.slice(0,5);
+
+// nombres de productos
+const labels = topProducts.map(p => p.name);
+
+// cantidades vendidas
+const sales = topProducts.map(p => p.sales);
+
+// crear grafico
+const ctx = document.getElementById('salesChart');
+
+new Chart(ctx, {
+
+type: 'bar',
+
+data: {
+labels: labels,
+
+datasets: [{
+label: 'Productos vendidos',
+data: sales
+}]
+
+},
+
+options: {
+
+responsive: true,
+
+plugins: {
+legend: {
+display: false
+}
+}
+
+}
+
+});
+
+}
+
 
 
 /* ======================================================
