@@ -193,6 +193,28 @@ color:#2e7d32;
 margin-bottom:20px;
 }
 
+/* GRAFICO DASHBOARD */
+
+.chart-section{
+background:white;
+padding:30px;
+border-radius:15px;
+margin-bottom:25px;
+box-shadow:0 6px 20px rgba(0,0,0,0.05);
+border:1px solid #e8f5e9;
+animation:fadeUp .5s ease;
+}
+
+.chart-section h3{
+color:#2e7d32;
+margin-bottom:20px;
+}
+
+#salesChart{
+max-width:100%;
+height:300px !important;
+}
+
 /* FORMULARIO */
 
 #addForm{
