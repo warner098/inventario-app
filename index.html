@@ -39,18 +39,17 @@
                 <h2>📊 Inventario en Tiempo Real</h2>
                 <p>Bienvenido, Admin. Total productos: <span id="totalProducts">0</span> | Stock total: <span id="totalStock">0</span> kg</p>
             </div>
-            <div>
-                <h3>📊 Productos más vendidos</h3>
-
-                <canvas id="salesChart" width="400" height="200"></canvas>
-
-            </div>
             <div class="header-right">
                 <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
             </div>
         </header>
 
         <div class="main-content">
+            <section class="chart-section">
+                <h3>📊 Productos más vendidos</h3>
+                <canvas id="salesChart"></canvas>
+                </section>
+
             <section class="add-section">
                 <h3>➕ Registrar Nuevo Producto</h3>
                 <form id="addForm">
