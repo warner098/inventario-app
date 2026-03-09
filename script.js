@@ -9,6 +9,9 @@ let inventory = [];
 let editingIndex = -1;
 //actualiza los productos mas vendidos
 let salesChart = null;
+//actualiza los productos mas movidos
+let movementChart = null;
+
 
 /* ======================================================
    MODULO DE CARGA DE DATOS (API)
@@ -209,6 +212,9 @@ document.getElementById('lowStockAlert').classList.toggle('hidden',!low);
 filterTable();
 
 renderSalesChart();
+
+renderMovementChart();
+
 
 
 }
@@ -465,6 +471,51 @@ display: false
 });
 
 }
+
+//modulo producto mas movido
+function renderMovementChart(){
+
+// ordenar por movimientos
+const sorted = [...inventory].sort((a,b)=> b.movements - a.movements);
+
+// tomar los 5 con más movimientos
+const topProducts = sorted.slice(0,5);
+
+const labels = topProducts.map(p => p.name);
+const movements = topProducts.map(p => p.movements);
+
+const ctx = document.getElementById('movementChart');
+
+// destruir grafico si existe
+if(movementChart){
+movementChart.destroy();
+}
+
+movementChart = new Chart(ctx,{
+
+type:'bar',
+
+data:{
+labels:labels,
+datasets:[{
+label:'Movimientos',
+data:movements
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+display:false
+}
+}
+}
+
+});
+
+}
+
 
 
 
