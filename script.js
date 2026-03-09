@@ -1,7 +1,18 @@
+/* ======================================================
+   MODULO DE INVENTARIO - VARIABLES GLOBALES
+======================================================*/
 
-// INVENTARIO
+// Arreglo donde se almacenan los productos obtenidos del servidor
 let inventory = [];
+
+// Índice utilizado cuando se edita un producto
 let editingIndex = -1;
+
+
+/* ======================================================
+   MODULO DE CARGA DE DATOS (API)
+   Obtiene los productos desde el servidor Node.js
+======================================================*/
 
 function loadData(){
 
@@ -11,6 +22,7 @@ fetch("/productos")
 
     console.log("Productos recibidos:", data);
 
+    // Convertimos los datos del servidor a objetos manejables
     inventory = data.map(p => ({
         id: p.id,
         name: p.name,
@@ -22,6 +34,7 @@ fetch("/productos")
         sales: parseFloat(p.sales)
     }));
 
+    // Actualizar panel principal
     updateDashboard();
 
 })
@@ -31,32 +44,52 @@ fetch("/productos")
 
 }
 
-// LOGIN
+
+/* ======================================================
+   MODULO DE AUTENTICACIÓN (LOGIN / LOGOUT)
+======================================================*/
+
+// Evento al enviar formulario de login
 document.getElementById('loginForm').addEventListener('submit',(e)=>{
+
     e.preventDefault();
 
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
 
+    // Validación simple de usuario
     if(user==="admin" && pass==="123"){
+
         document.getElementById('loginContainer').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
+
+        // Cargar inventario al iniciar sesión
         loadData();
+
     }else{
         document.getElementById('loginError').textContent="❌ Usuario o contraseña incorrectos";
     }
+
 });
 
+// Cerrar sesión
 document.getElementById('logoutBtn').addEventListener('click',()=>{
+
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('loginContainer').classList.remove('hidden');
+
 });
 
-// AGREGAR / EDITAR PRODUCTO
+
+/* ======================================================
+   MODULO DE REGISTRO Y EDICIÓN DE PRODUCTOS
+======================================================*/
+
 document.getElementById('addForm').addEventListener('submit',(e)=>{
 
 e.preventDefault();
 
+// Obtener datos del formulario
 const name = document.getElementById('productName').value.trim();
 const quantity = parseFloat(document.getElementById('quantity').value);
 const unit = document.getElementById('unit').value;
@@ -66,7 +99,9 @@ const expiryDate = document.getElementById('expiryDate').value;
 const errorBox = document.getElementById('formError');
 errorBox.textContent="";
 
-// VALIDACIONES
+
+/* ================= VALIDACIONES ================= */
+
 if(!name || !unit || !registerDate || !expiryDate){
 errorBox.textContent="⚠️ Todos los campos son obligatorios";
 return;
@@ -82,6 +117,8 @@ errorBox.textContent="⚠️ Caducidad inválida";
 return;
 }
 
+
+// Objeto producto
 const product={
 name,
 quantity,
@@ -92,7 +129,9 @@ movements:0,
 sales:0
 };
 
-// EDITAR PRODUCTO
+
+/* ================= EDITAR PRODUCTO ================= */
+
 if(editingIndex>=0){
 
 const id = inventory[editingIndex].id;
@@ -111,7 +150,8 @@ document.querySelector('#addForm button').textContent="Agregar";
 
 }else{
 
-// AGREGAR PRODUCTO
+/* ================= AGREGAR PRODUCTO ================= */
+
 fetch("/productos",{
 method:"POST",
 headers:{
@@ -127,7 +167,11 @@ document.getElementById('addForm').reset();
 
 });
 
-// BUSCADOR
+
+/* ======================================================
+   MODULO DE BUSQUEDA DE PRODUCTOS
+======================================================*/
+
 function filterTable(){
 
 const search=document.getElementById('searchInput').value.toLowerCase();
@@ -142,24 +186,34 @@ renderRows(filtered);
 
 document.getElementById('searchInput').addEventListener('input',filterTable);
 
-// DASHBOARD
+
+/* ======================================================
+   MODULO DASHBOARD (ESTADISTICAS)
+======================================================*/
+
 function updateDashboard(){
 
+// Total productos registrados
 document.getElementById('totalProducts').textContent=inventory.length;
 
+// Stock total
 const totalStock = inventory.reduce((sum,item)=>sum+item.quantity,0);
-
 document.getElementById('totalStock').textContent=totalStock.toFixed(1);
 
+// Alerta de stock bajo
 const low = inventory.some(item=>item.quantity<10);
-
 document.getElementById('lowStockAlert').classList.toggle('hidden',!low);
 
+// Actualizar tabla
 filterTable();
 
 }
 
-// TABLA
+
+/* ======================================================
+   MODULO TABLA DE INVENTARIO
+======================================================*/
+
 function renderRows(data){
 
 console.log("Renderizando tabla:", data);
@@ -174,11 +228,13 @@ data.forEach(item=>{
 const index = inventory.indexOf(item);
 const expiry = new Date(item.expiryDate);
 
+// Estado del producto
 let status="✅ OK";
 
 if(expiry<=today) status="❌ Caducado";
 else if(item.quantity<10) status="⚠️ Bajo";
 
+// Crear fila
 const row=document.createElement('tr');
 
 row.innerHTML=`
@@ -207,7 +263,11 @@ tbody.appendChild(row);
 
 }
 
-// EDITAR
+
+/* ======================================================
+   MODULO EDICIÓN DE PRODUCTO
+======================================================*/
+
 function editItem(index){
 
 const item=inventory[index];
@@ -226,7 +286,11 @@ window.scrollTo(0,0);
 
 }
 
-// ELIMINAR
+
+/* ======================================================
+   MODULO ELIMINAR PRODUCTO
+======================================================*/
+
 function deleteItem(index){
 
 const id = inventory[index].id;
@@ -242,7 +306,12 @@ method:"DELETE"
 
 }
 
-// ENTRADA DE STOCK
+
+/* ======================================================
+   MODULO MOVIMIENTO DE INVENTARIO
+======================================================*/
+
+// Entrada de stock
 function addStock(index){
 
 const amount = parseFloat(prompt("Cantidad a ingresar:"));
@@ -265,7 +334,8 @@ body:JSON.stringify({amount})
 
 }
 
-// SALIDA / VENTA
+
+// Salida o venta de producto
 function removeStock(index){
 
 const amount=parseFloat(prompt("Cantidad a retirar:"));
@@ -288,7 +358,12 @@ body:JSON.stringify({amount})
 
 }
 
-// PRODUCTO CON MÁS MOVIMIENTO
+
+/* ======================================================
+   MODULO REPORTES
+======================================================*/
+
+// Producto con mayor movimiento
 function getTopProduct(){
 
 fetch("/productos/top-movimientos")
@@ -303,7 +378,8 @@ Movimientos: ${top.movements}`);
 
 }
 
-// PRODUCTO MÁS VENDIDO
+
+// Producto más vendido
 function getTopSellingProduct(){
 
 fetch("/productos/top-ventas")
@@ -318,7 +394,11 @@ Cantidad vendida: ${top.sales}`);
 
 }
 
-// CALCULADORA DE PRECIOS
+
+/* ======================================================
+   MODULO CALCULADORA DE PRECIOS
+======================================================*/
+
 function calculateSellingPrice(){
 
 const cost = parseFloat(document.getElementById("calcCost").value);
@@ -338,7 +418,11 @@ document.getElementById("calcProfit").textContent = "$" + profit.toFixed(2);
 
 }
 
-// DESCARGAR INVENTARIO EN PDF
+
+/* ======================================================
+   MODULO GENERACIÓN DE REPORTES PDF
+======================================================*/
+
 function downloadInventoryPDF(){
 
 const { jsPDF } = window.jspdf;
@@ -350,7 +434,7 @@ doc.text("Inventario - Verdulería Jipijapa", 14, 20);
 doc.setFontSize(11);
 doc.text("Fecha: " + new Date().toLocaleDateString(), 14, 28);
 
-// columnas
+// Columnas
 const columns = [
 "Producto",
 "Cantidad",
@@ -362,7 +446,7 @@ const columns = [
 "Ventas"
 ];
 
-// filas
+// Filas
 const rows = inventory.map(item => {
 
 const today = new Date();
@@ -386,14 +470,14 @@ item.sales
 
 });
 
-// crear tabla
+// Crear tabla
 doc.autoTable({
 head: [columns],
 body: rows,
 startY: 35
 });
 
-// guardar pdf
+// Descargar archivo
 doc.save("inventario-verduleria.pdf");
 
 }
