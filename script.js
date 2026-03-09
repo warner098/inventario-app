@@ -7,7 +7,8 @@ let inventory = [];
 
 // Índice utilizado cuando se edita un producto
 let editingIndex = -1;
-
+//actualiza los productos mas vendidos
+let salesChart = null;
 
 /* ======================================================
    MODULO DE CARGA DE DATOS (API)
@@ -430,44 +431,41 @@ const sorted = [...inventory].sort((a,b)=> b.sales - a.sales);
 // tomar los 5 más vendidos
 const topProducts = sorted.slice(0,5);
 
-// nombres de productos
 const labels = topProducts.map(p => p.name);
-
-// cantidades vendidas
 const sales = topProducts.map(p => p.sales);
 
-// crear grafico
 const ctx = document.getElementById('salesChart');
 
-new Chart(ctx, {
+// si el grafico ya existe lo destruimos
+if(salesChart){
+salesChart.destroy();
+}
+
+salesChart = new Chart(ctx, {
 
 type: 'bar',
 
 data: {
 labels: labels,
-
 datasets: [{
 label: 'Productos vendidos',
 data: sales
 }]
-
 },
 
 options: {
-
 responsive: true,
-
 plugins: {
 legend: {
 display: false
 }
 }
-
 }
 
 });
 
 }
+
 
 
 
